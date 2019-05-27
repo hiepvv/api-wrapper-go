@@ -49,6 +49,7 @@ type PublishSocialLink struct {
 	address   string
 	streamKey string
 }
+type PushInfo interface{}
 type PullInfo interface{}
 type LiveCreateParams struct {
 	Params            `form:"*"`
@@ -107,7 +108,7 @@ type LiveData struct {
 	LinkPublishSocial []PublishSocialLink `json:"linkPublishSocial"`
 	LinkStream        []string            `json:"linkStream"`
 	LastPullInfo      PullInfo            `json:"lastPullInfo"`
-	LastPushInfo      string              `json:"lastPushInfo"`
+	LastPushInfo      PushInfo              `json:"lastPushInfo"`
 	LastProcess       string              `json:"lastProcess"`
 	EventType         string              `json:"eventType"`
 	Drm               DrmType             `json:"drm"`
@@ -131,7 +132,7 @@ type LiveUpdateParams struct {
 	Thumbnail         *string              `json:"thumbnail"`
 	LinkStream        []*string            `json:"linkStream"`
 	LastPullInfo      *PullInfo            `json:"lastPullInfo"`
-	LastPushInfo      *string              `json:"lastPushInfo"`
+	LastPushInfo      *PushInfo              `json:"lastPushInfo"`
 	LinkPublishSocial []*PublishSocialLink `json:"linkPublishSocial"`
 	LastProcess       *string              `json:"lastProcess"`
 	EventType         *string              `json:"eventType"`
