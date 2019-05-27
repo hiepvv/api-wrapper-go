@@ -3,7 +3,7 @@ package live
 import (
 	"net/http"
 
-	uiza "github.com/uizaio/api-wrapper-go"
+	uiza "github.com/hiepvv/api-wrapper-go"
 )
 
 type Client struct {
