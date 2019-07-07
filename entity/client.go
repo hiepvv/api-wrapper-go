@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	uiza "github.com/uizaio/api-wrapper-go"
+	uiza "github.com/hiepvv/api-wrapper-go"
 )
 
 // Client is used to invoke /Entity and entity-related APIs.
