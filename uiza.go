@@ -20,7 +20,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/uizaio/api-wrapper-go/form"
+	"github.com/hiepvv/api-wrapper-go/form"
 )
 
 //
