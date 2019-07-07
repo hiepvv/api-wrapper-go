@@ -96,6 +96,8 @@ type ListParamsContainer interface {
 // of any *Params structure.
 type Params struct {
 	Metadata map[string]string `form:"metadata"`
+	Page     string            `form:"page"`
+	Limit    string            `form:"limit"`
 	AppID    string            `form:"appId"`
 	// key or query the state of the API.
 	Context context.Context `form:"-"`
@@ -110,6 +112,14 @@ func (p *Params) AddMetadata(key, value string) {
 	}
 
 	p.Metadata[key] = value
+}
+
+func (p *Params) AddPage(value string) {
+	p.Page = value
+}
+
+func (p *Params) AddLimit(value string) {
+	p.Limit = value
 }
 
 // GetParams returns a Params struct (itself). It exists because any structs
