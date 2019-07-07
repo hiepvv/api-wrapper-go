@@ -1,5 +1,9 @@
 package uiza
 
+import (
+	"encoding/json"
+)
+
 type ResourceModeType string
 
 const (
@@ -58,6 +62,7 @@ type LiveCreateParams struct {
 	Name              *string              `form:"name"`
 	Description       *string              `form:"description"`
 	Mode              *ModeType            `form:"mode"`
+	Region            string               `form:"region"`
 	ResourceMode      *ResourceModeType    `form:"resourceMode"`
 	Encode            *EncodeType          `form:"encode"`
 	Dvr               *DvrType             `form:"dvr"`
@@ -91,6 +96,16 @@ type LiveIDResponse struct {
 	Data *LiveIDData `json:"data"`
 }
 
+type RegionResponse struct {
+	Data *RegionData `json:data`
+}
+
+type RegionData struct {
+	Singapore   string `json:SINGAPORE`
+	Vietnam     string `json:VIETNAM`
+	Googlecloud string `json:GOOGLECLOUD`
+}
+
 type LiveResponse struct {
 	Data *LiveData `json:"data"`
 }
@@ -99,8 +114,9 @@ type LiveData struct {
 	ID                string              `json:"id"`
 	Name              string              `json:"name"`
 	Description       string              `json:"description"`
-	Mode              string              `json:"mode"`
+	Mode              ModeType            `json:"mode"`
 	ResourceMode      ResourceModeType    `json:"resourceMode"`
+	Region            string              `json:"region"`
 	Encode            EncodeType          `json:"encode"`
 	ChannelName       string              `json:"channelName"`
 	LastPresetId      string              `json:"lastPresetId"`
@@ -108,15 +124,16 @@ type LiveData struct {
 	Poster            string              `json:"poster"`
 	Thumbnail         string              `json:"thumbnail"`
 	LinkPublishSocial []PublishSocialLink `json:"linkPublishSocial"`
-	LinkStream        []string            `json:"linkStream"`
-	LastPullInfo      PullInfo            `json:"lastPullInfo"`
-	LastPushInfo      []PushInfo          `json:"lastPushInfo"`
-	LastProcess       string              `json:"lastProcess"`
-	EventType         string              `json:"eventType"`
-	Drm               DrmType             `json:"drm"`
-	Dvr               DvrType             `json:"dvr"`
-	CreatedAt         string              `json:"createdAt"`
-	UpdatedAt         string              `json:"updatedAt"`
+	LinkStreamRaw     string              `json:"linkStream"`
+	LinkStream        []string
+	LastPullInfo      PullInfo   `json:"lastPullInfo"`
+	LastPushInfo      []PushInfo `json:"lastPushInfo"`
+	LastProcess       string     `json:"lastProcess"`
+	EventType         string     `json:"eventType"`
+	Drm               DrmType    `json:"drm"`
+	Dvr               DvrType    `json:"dvr"`
+	CreatedAt         string     `json:"createdAt"`
+	UpdatedAt         string     `json:"updatedAt"`
 }
 
 type LiveUpdateParams struct {
@@ -125,6 +142,7 @@ type LiveUpdateParams struct {
 	Description       *string              `form:"description"`
 	Mode              *ModeType            `form:"mode"`
 	ResourceMode      *ResourceModeType    `form:"resourceMode"`
+	Region            string               `json:"region"`
 	Encode            *EncodeType          `form:"encode"`
 	Drm               *DrmType             `form:"drm"`
 	Dvr               *DvrType             `form:"dvr"`
@@ -170,4 +188,28 @@ type LiveRecordedData struct {
 	CreatedAt      string `json:"createdAt"`
 	UpdatedAt      string `json:"updatedAt"`
 	EntityName     string `json:"entityName"`
+}
+
+// UnmarshalJSON handles deserialization of a Customer.
+// This custom unmarshaling is needed because the resulting
+// property may be an id or the full struct if it was expanded.
+func (c *LiveData) UnmarshalJSON(data []byte) error {
+
+	type liveData LiveData
+	var v liveData
+
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*c = LiveData(v)
+	var LinkStream []string
+	if c.LinkStreamRaw == "" {
+		return nil
+	}
+	if err := json.Unmarshal([]byte(c.LinkStreamRaw), &LinkStream); err != nil {
+		return err
+	}
+	c.LinkStream = LinkStream
+	return nil
 }
